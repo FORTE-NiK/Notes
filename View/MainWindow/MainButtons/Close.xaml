@@ -1,0 +1,8 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+>
+
+<DrawingImage x:Key="Close">
+  <DrawingImage.Drawing>    <DrawingGroup>      <DrawingGroup.Children>        <DrawingGroup>          <DrawingGroup.Children>            <GeometryDrawing Brush="#FF878787" Pen="{x:Null}">              <GeometryDrawing.Geometry>                <PathGeometry FillRule="Nonzero" Figures="M14.40625,13L13,14.40625 23.625,25 13,35.59375 14.40625,37 25.0625,26.40625 35.6875,37 37.09375,35.59375 26.46875,25 37.09375,14.40625 35.6875,13 25.0625,23.59375z" />              </GeometryDrawing.Geometry>            </GeometryDrawing>          </DrawingGroup.Children>          <DrawingGroup.ClipGeometry>            <RectangleGeometry Rect="0,0,50,50" />          </DrawingGroup.ClipGeometry>        </DrawingGroup>      </DrawingGroup.Children>    </DrawingGroup>  </DrawingImage.Drawing></DrawingImage>
+
+</ResourceDictionary>

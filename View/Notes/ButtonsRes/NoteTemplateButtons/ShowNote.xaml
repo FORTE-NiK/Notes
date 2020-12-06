@@ -1,0 +1,8 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+>
+
+<DrawingImage x:Key="ShowNote">
+  <DrawingImage.Drawing>    <DrawingGroup>      <DrawingGroup.Children>        <DrawingGroup>          <DrawingGroup.Children>            <GeometryDrawing Brush="#FF878787" Pen="{x:Null}">              <GeometryDrawing.Geometry>                <PathGeometry FillRule="Nonzero" Figures="M16,2.09375L15.28125,2.78125 7.28125,10.78125 8.71875,12.21875 15,5.9375 15,26.0625 8.71875,19.78125 7.28125,21.21875 15.28125,29.21875 16,29.90625 16.71875,29.21875 24.71875,21.21875 23.28125,19.78125 17,26.0625 17,5.9375 23.28125,12.21875 24.71875,10.78125 16.71875,2.78125z" />              </GeometryDrawing.Geometry>            </GeometryDrawing>          </DrawingGroup.Children>          <DrawingGroup.ClipGeometry>            <RectangleGeometry Rect="0,0,32,32" />          </DrawingGroup.ClipGeometry>        </DrawingGroup>      </DrawingGroup.Children>    </DrawingGroup>  </DrawingImage.Drawing></DrawingImage>
+
+</ResourceDictionary>

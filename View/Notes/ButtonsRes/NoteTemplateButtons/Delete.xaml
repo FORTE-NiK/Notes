@@ -1,0 +1,8 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+>
+
+<DrawingImage x:Key="Delete">
+  <DrawingImage.Drawing>    <DrawingGroup>      <DrawingGroup.Children>        <DrawingGroup>          <DrawingGroup.Children>            <GeometryDrawing Brush="#FF878787" Pen="{x:Null}">              <GeometryDrawing.Geometry>                <PathGeometry FillRule="Nonzero" Figures="M14.693359,3.8925781L11.585938,7 8.5195312,7 3.9277344,12.738281 4.9804688,18 3.9003906,23.400391 9.6484375,28 19.333984,28 23.496094,24.876953 28,23.048828 28,21.859375 26.001953,14.869141 28,10.529297 28,9 22.302734,9 20,7.4648438 20,5.21875 14.693359,3.8925781z M15.306641,6.1074219L18,6.78125 18,8.5351562 20.011719,9.8769531 17.181641,11.291016 16.050781,14.683594 17.949219,15.316406 18.818359,12.708984 22.236328,11 25.582031,11 22.292969,18.146484 18.757812,19.029297 19.242188,20.970703 23.707031,19.853516 24.71875,17.65625 25.888672,21.748047 22.503906,23.123047 18.666016,26 11.869141,26 15.460938,20.611328 10.447266,18.105469 9.5527344,19.894531 12.539062,21.388672 9.7734375,25.537109 6.0996094,22.599609 7.0195312,18 6.2910156,14.353516 9,15.03125 13.242188,13.970703 12.757812,12.029297 9,12.96875 6.7558594,12.408203 9.4804688,9 12.414062,9 15.306641,6.1074219z" />              </GeometryDrawing.Geometry>            </GeometryDrawing>          </DrawingGroup.Children>          <DrawingGroup.ClipGeometry>            <RectangleGeometry Rect="0,0,32,32" />          </DrawingGroup.ClipGeometry>        </DrawingGroup>      </DrawingGroup.Children>    </DrawingGroup>  </DrawingImage.Drawing></DrawingImage>
+
+</ResourceDictionary>

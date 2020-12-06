@@ -1,0 +1,680 @@
+﻿<Window x:Class="ForteNotes.Notes.NoteWindowBlack"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:ForteNotes.Notes"
+		mc:Ignorable="d"
+		Title="NoteWindow" 
+        Icon="Icon/noteIcon.ico"
+        ShowInTaskbar="False"
+		Height="{Binding Path=Height, Mode=TwoWay}" Width="{Binding Path=Width, Mode=TwoWay}"
+        MinHeight="465" MinWidth="206"
+		WindowStyle="None"
+        Visibility="{Binding Path=WinVisibility}"
+		AllowsTransparency="True"
+		ShowActivated="False"
+		Background="Transparent"
+        Top="{Binding Path= WindowY, Mode=TwoWay}"
+        Left="{Binding Path= WindowX, Mode=TwoWay}"
+		>
+    <Window.Resources>
+        <Style x:Key="Resize">
+            <Setter Property="WindowChrome.WindowChrome">
+                <Setter.Value>
+                    <WindowChrome CaptionHeight="0" ResizeBorderThickness="3"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="Bt" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Background" Value="Transparent" />
+
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="Button.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:1" Storyboard.TargetProperty="Opacity"  From="1" SpeedRatio="9" To="0.5" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Button.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:1" Storyboard.TargetProperty="Opacity"  From="0.5" SpeedRatio="9" To="1" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="ColorBt" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Width" Value="28"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter Content="{TemplateBinding Content}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="Button.MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:1" Storyboard.TargetProperty="Opacity"  From="1" SpeedRatio="9" To="0.5" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Button.MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:1" Storyboard.TargetProperty="Opacity"  From="0.5" SpeedRatio="9" To="1" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Border Name="GridNote" Margin="3,0,3,3" BorderThickness="0.8" BorderBrush="{Binding Path=BorderColor}">
+        <Border.Effect>
+            <DropShadowEffect Color="Black" Direction="-75"
+                              BlurRadius="4" ShadowDepth="2" Opacity="0.4"/>
+        </Border.Effect>
+        <Grid  Background="#1E1E1E">
+            <Grid.RowDefinitions >
+                <RowDefinition Height="32"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Border/>
+			<Border Grid.Row="0" 
+					Panel.ZIndex="2"
+					Name="Dock" 
+					Margin="0, -25 , 0, 0">
+                <DockPanel LastChildFill="False"
+						   Background="{Binding Path=DockColorBlack}" 
+						   MouseDown="MoveNote" 
+						   Height="32" 
+						   Name="DockColor"
+						   VerticalAlignment="Bottom">
+                    <Button Width="32" 
+							Style="{StaticResource Bt}" 
+							Name="CloseNoteButton"
+							Height="32" 
+							DockPanel.Dock="Right" 
+							Command="{Binding Path=CloseNoteButton}">
+						<Image Source="ButtonsRes/DockButtons/Close.png" Width="20" Height="20"/>
+						<Button.Triggers>
+							<EventTrigger RoutedEvent="Button.Click">
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Duration="0:0:1" Storyboard.TargetProperty="Opacity"  Storyboard.TargetName="GridNote" From="1" SpeedRatio="7" To="0" />
+									</Storyboard>
+								</BeginStoryboard>
+							</EventTrigger>
+						</Button.Triggers>
+					</Button>
+					<Button Height="32"
+							Style="{StaticResource Bt}"
+							Width="32" 
+							DockPanel.Dock="Right"
+							>
+						<Image Source="ButtonsRes/DockButtons/Menu.png" Width="16" Height="16" />
+						<Button.Triggers>
+							<EventTrigger RoutedEvent="Button.Click">
+								<BeginStoryboard>
+									<Storyboard>
+										<DoubleAnimation Storyboard.TargetName="ColorPickMenu" Duration="0:0:1" SpeedRatio="15" Storyboard.TargetProperty="Height" To="110">
+                                            <DoubleAnimation.EasingFunction>
+                                                <ElasticEase EasingMode="EaseInOut" Oscillations="5" Springiness="4" />
+                                            </DoubleAnimation.EasingFunction>
+                                        </DoubleAnimation>
+									</Storyboard>
+								</BeginStoryboard>
+							</EventTrigger>
+						</Button.Triggers>
+					</Button>
+					<Button Height="32"
+							Command="{Binding Path=CreateNote}"
+							Style="{StaticResource Bt}"
+							Width="32" 
+							DockPanel.Dock="Left">
+						<!--Click="CreateNote"-->
+						<Image Source="ButtonsRes/DockButtons/Create.png" 
+							   Width="20"
+							   Height="20"/>
+					</Button>
+				</DockPanel>
+			</Border>
+            <Border Grid.Row="1" Height="0" VerticalAlignment="Top"
+					Background="#333333"
+					Panel.ZIndex="1" 
+					MaxWidth="3000" 
+					HorizontalAlignment="Right"
+					BorderThickness="1"
+                    RenderOptions.BitmapScalingMode="NearestNeighbor"
+					Name="ColorPickMenu">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="7" Direction="270" Color="#FF333333" ShadowDepth="3"/>
+                </Border.Effect>
+                <Grid Width="196">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <DockPanel Grid.Row="0">
+                        <Button  Style="{StaticResource ColorBt}" Command="{Binding Path=ChangeDockColor}" CommandParameter="Yellow"> <!--FIX THIS, too much xaml code-->
+                            <Image Stretch="UniformToFill" Source="ButtonsRes/Colors/Yellow.png"/>
+                            <Button.Triggers>
+                                <EventTrigger RoutedEvent="Button.Click">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="DockColor" Storyboard.TargetProperty="(DockPanel.Background).(SolidColorBrush.Color)" To="#E6B905"/>
+                                            <ColorAnimation Storyboard.TargetName="Monday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#E6B905"/>
+                                            <ColorAnimation Storyboard.TargetName="MondayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#E6B905"/>
+                                            <ColorAnimation Storyboard.TargetName="Tuesday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#E6B905"/>
+                                            <ColorAnimation Storyboard.TargetName="TuesdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#E6B905"/>
+                                            <ColorAnimation Storyboard.TargetName="Wednesday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#E6B905"/>
+                                            <ColorAnimation Storyboard.TargetName="WednesdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#E6B905"/>
+                                            <ColorAnimation Storyboard.TargetName="Thursday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#E6B905"/>
+                                            <ColorAnimation Storyboard.TargetName="ThursdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#E6B905"/>
+                                            <ColorAnimation Storyboard.TargetName="Friday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#E6B905"/>
+                                            <ColorAnimation Storyboard.TargetName="FridayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#E6B905"/>
+                                            <ColorAnimation Storyboard.TargetName="Saturday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#E6B905"/>
+                                            <ColorAnimation Storyboard.TargetName="SaturdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#E6B905"/>
+                                            <ColorAnimation Storyboard.TargetName="Sunday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#E6B905"/>
+                                            <ColorAnimation Storyboard.TargetName="SundayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#E6B905"/>
+                                            <ColorAnimation Storyboard.TargetName="Additional" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#E6B905"/>
+                                            <ColorAnimation Storyboard.TargetName="AdditionalBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#E6B905"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Button.Triggers>
+                        </Button>
+                        <Button  Style="{StaticResource ColorBt}" Command="{Binding Path=ChangeDockColor}" CommandParameter="Green">
+                            <Image Stretch="UniformToFill" Source="ButtonsRes/Colors/Green.png"/>
+                            <Button.Triggers>
+                                <EventTrigger RoutedEvent="Button.Click">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="DockColor" Storyboard.TargetProperty="(DockPanel.Background).(SolidColorBrush.Color)" To="#6FD262"/>
+                                            <ColorAnimation Storyboard.TargetName="Monday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#6FD262"/>
+                                            <ColorAnimation Storyboard.TargetName="MondayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#6FD262"/>
+                                            <ColorAnimation Storyboard.TargetName="Tuesday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#6FD262"/>
+                                            <ColorAnimation Storyboard.TargetName="TuesdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#6FD262"/>
+                                            <ColorAnimation Storyboard.TargetName="Wednesday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#6FD262"/>
+                                            <ColorAnimation Storyboard.TargetName="WednesdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#6FD262"/>
+                                            <ColorAnimation Storyboard.TargetName="Thursday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#6FD262"/>
+                                            <ColorAnimation Storyboard.TargetName="ThursdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#6FD262"/>
+                                            <ColorAnimation Storyboard.TargetName="Friday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#6FD262"/>
+                                            <ColorAnimation Storyboard.TargetName="FridayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#6FD262"/>
+                                            <ColorAnimation Storyboard.TargetName="Saturday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#6FD262"/>
+                                            <ColorAnimation Storyboard.TargetName="SaturdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#6FD262"/>
+                                            <ColorAnimation Storyboard.TargetName="Sunday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#6FD262"/>
+                                            <ColorAnimation Storyboard.TargetName="SundayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#6FD262"/>
+                                            <ColorAnimation Storyboard.TargetName="Additional" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#6FD262"/>
+                                            <ColorAnimation Storyboard.TargetName="AdditionalBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#6FD262"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Button.Triggers>
+                        </Button>
+                        <Button  Style="{StaticResource ColorBt}" Command="{Binding Path=ChangeDockColor}" CommandParameter="Pink">
+                            <Image Stretch="UniformToFill" Source="ButtonsRes/Colors/Pink.png"/>
+                            <Button.Triggers>
+                                <EventTrigger RoutedEvent="Button.Click">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="DockColor" Storyboard.TargetProperty="(DockPanel.Background).(SolidColorBrush.Color)" To="#EA86C2"/>
+                                            <ColorAnimation Storyboard.TargetName="Monday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#EA86C2"/>
+                                            <ColorAnimation Storyboard.TargetName="MondayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#EA86C2"/>
+                                            <ColorAnimation Storyboard.TargetName="Tuesday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#EA86C2"/>
+                                            <ColorAnimation Storyboard.TargetName="TuesdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#EA86C2"/>
+                                            <ColorAnimation Storyboard.TargetName="Wednesday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#EA86C2"/>
+                                            <ColorAnimation Storyboard.TargetName="WednesdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#EA86C2"/>
+                                            <ColorAnimation Storyboard.TargetName="Thursday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#EA86C2"/>
+                                            <ColorAnimation Storyboard.TargetName="ThursdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#EA86C2"/>
+                                            <ColorAnimation Storyboard.TargetName="Friday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#EA86C2"/>
+                                            <ColorAnimation Storyboard.TargetName="FridayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#EA86C2"/>
+                                            <ColorAnimation Storyboard.TargetName="Saturday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#EA86C2"/>
+                                            <ColorAnimation Storyboard.TargetName="SaturdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#EA86C2"/>
+                                            <ColorAnimation Storyboard.TargetName="Sunday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#EA86C2"/>
+                                            <ColorAnimation Storyboard.TargetName="SundayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#EA86C2"/>
+                                            <ColorAnimation Storyboard.TargetName="Additional" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#EA86C2"/>
+                                            <ColorAnimation Storyboard.TargetName="AdditionalBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#EA86C2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Button.Triggers>
+                        </Button>
+                        <Button  Style="{StaticResource ColorBt}" Command="{Binding Path=ChangeDockColor}" CommandParameter="Violet">
+                            <Image Stretch="UniformToFill" Source="ButtonsRes/Colors/Violet.png"/>
+                            <Button.Triggers>
+                                <EventTrigger RoutedEvent="Button.Click">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="DockColor" Storyboard.TargetProperty="(DockPanel.Background).(SolidColorBrush.Color)" To="#C78EFF"/>
+                                            <ColorAnimation Storyboard.TargetName="Monday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#C78EFF"/>
+                                            <ColorAnimation Storyboard.TargetName="MondayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#C78EFF"/>
+                                            <ColorAnimation Storyboard.TargetName="Tuesday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#C78EFF"/>
+                                            <ColorAnimation Storyboard.TargetName="TuesdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#C78EFF"/>
+                                            <ColorAnimation Storyboard.TargetName="Wednesday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#C78EFF"/>
+                                            <ColorAnimation Storyboard.TargetName="WednesdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#C78EFF"/>
+                                            <ColorAnimation Storyboard.TargetName="Thursday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#C78EFF"/>
+                                            <ColorAnimation Storyboard.TargetName="ThursdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#C78EFF"/>
+                                            <ColorAnimation Storyboard.TargetName="Friday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#C78EFF"/>
+                                            <ColorAnimation Storyboard.TargetName="FridayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#C78EFF"/>
+                                            <ColorAnimation Storyboard.TargetName="Saturday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#C78EFF"/>
+                                            <ColorAnimation Storyboard.TargetName="SaturdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#C78EFF"/>
+                                            <ColorAnimation Storyboard.TargetName="Sunday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#C78EFF"/>
+                                            <ColorAnimation Storyboard.TargetName="SundayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#C78EFF"/>
+                                            <ColorAnimation Storyboard.TargetName="Additional" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#C78EFF"/>
+                                            <ColorAnimation Storyboard.TargetName="AdditionalBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#C78EFF"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Button.Triggers>
+                        </Button>
+                        <Button Style="{StaticResource ColorBt}" Command="{Binding Path=ChangeDockColor}" CommandParameter="Blue">
+                            <Image Stretch="UniformToFill" Source="ButtonsRes/Colors/Blue.png"/>
+                            <Button.Triggers>
+                                <EventTrigger RoutedEvent="Button.Click">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="DockColor" Storyboard.TargetProperty="(DockPanel.Background).(SolidColorBrush.Color)" To="#5AC0E7"/>
+                                            <ColorAnimation Storyboard.TargetName="Monday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#5AC0E7"/>
+                                            <ColorAnimation Storyboard.TargetName="MondayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#5AC0E7"/>
+                                            <ColorAnimation Storyboard.TargetName="Tuesday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#5AC0E7"/>
+                                            <ColorAnimation Storyboard.TargetName="TuesdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#5AC0E7"/>
+                                            <ColorAnimation Storyboard.TargetName="Wednesday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#5AC0E7"/>
+                                            <ColorAnimation Storyboard.TargetName="WednesdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#5AC0E7"/>
+                                            <ColorAnimation Storyboard.TargetName="Thursday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#5AC0E7"/>
+                                            <ColorAnimation Storyboard.TargetName="ThursdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#5AC0E7"/>
+                                            <ColorAnimation Storyboard.TargetName="Friday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#5AC0E7"/>
+                                            <ColorAnimation Storyboard.TargetName="FridayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#5AC0E7"/>
+                                            <ColorAnimation Storyboard.TargetName="Saturday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#5AC0E7"/>
+                                            <ColorAnimation Storyboard.TargetName="SaturdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#5AC0E7"/>
+                                            <ColorAnimation Storyboard.TargetName="Sunday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#5AC0E7"/>
+                                            <ColorAnimation Storyboard.TargetName="SundayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#5AC0E7"/>
+                                            <ColorAnimation Storyboard.TargetName="Additional" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#5AC0E7"/>
+                                            <ColorAnimation Storyboard.TargetName="AdditionalBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#5AC0E7"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Button.Triggers>
+                        </Button>
+                        <Button  Style="{StaticResource ColorBt}" Command="{Binding Path=ChangeDockColor}" CommandParameter="GrayLight">
+                            <Image Stretch="UniformToFill" Source="ButtonsRes/Colors/GrayLight.png"/>
+                            <Button.Triggers>
+                                <EventTrigger RoutedEvent="Button.Click">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="DockColor" Storyboard.TargetProperty="(DockPanel.Background).(SolidColorBrush.Color)" To="#898989"/>
+                                            <ColorAnimation Storyboard.TargetName="Monday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#898989"/>
+                                            <ColorAnimation Storyboard.TargetName="MondayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#898989"/>
+                                            <ColorAnimation Storyboard.TargetName="Tuesday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#898989"/>
+                                            <ColorAnimation Storyboard.TargetName="TuesdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#898989"/>
+                                            <ColorAnimation Storyboard.TargetName="Wednesday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#898989"/>
+                                            <ColorAnimation Storyboard.TargetName="WednesdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#898989"/>
+                                            <ColorAnimation Storyboard.TargetName="Thursday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#898989"/>
+                                            <ColorAnimation Storyboard.TargetName="ThursdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#898989"/>
+                                            <ColorAnimation Storyboard.TargetName="Friday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#898989"/>
+                                            <ColorAnimation Storyboard.TargetName="FridayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#898989"/>
+                                            <ColorAnimation Storyboard.TargetName="Saturday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#898989"/>
+                                            <ColorAnimation Storyboard.TargetName="SaturdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#898989"/>
+                                            <ColorAnimation Storyboard.TargetName="Sunday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#898989"/>
+                                            <ColorAnimation Storyboard.TargetName="SundayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#898989"/>
+                                            <ColorAnimation Storyboard.TargetName="Additional" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#898989"/>
+                                            <ColorAnimation Storyboard.TargetName="AdditionalBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#898989"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Button.Triggers>
+                        </Button>
+                        <Button Style="{StaticResource ColorBt}" Command="{Binding Path=ChangeDockColor}" CommandParameter="Gray">
+                            <Image Stretch="UniformToFill" Source="ButtonsRes/Colors/Gray.png"/>
+                            <Button.Triggers>
+                                <EventTrigger RoutedEvent="Button.Click">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="DockColor" Storyboard.TargetProperty="(DockPanel.Background).(SolidColorBrush.Color)" To="#505050"/>
+                                            <ColorAnimation Storyboard.TargetName="Monday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#FFFFFF"/>
+                                            <ColorAnimation Storyboard.TargetName="MondayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#FFFFFF"/>
+                                            <ColorAnimation Storyboard.TargetName="Tuesday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#FFFFFF"/>
+                                            <ColorAnimation Storyboard.TargetName="TuesdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#FFFFFF"/>
+                                            <ColorAnimation Storyboard.TargetName="Wednesday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#FFFFFF"/>
+                                            <ColorAnimation Storyboard.TargetName="WednesdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#FFFFFF"/>
+                                            <ColorAnimation Storyboard.TargetName="Thursday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#FFFFFF"/>
+                                            <ColorAnimation Storyboard.TargetName="ThursdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#FFFFFF"/>
+                                            <ColorAnimation Storyboard.TargetName="Friday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#FFFFFF"/>
+                                            <ColorAnimation Storyboard.TargetName="FridayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#FFFFFF"/>
+                                            <ColorAnimation Storyboard.TargetName="Saturday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#FFFFFF"/>
+                                            <ColorAnimation Storyboard.TargetName="SaturdayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#FFFFFF"/>
+                                            <ColorAnimation Storyboard.TargetName="Sunday" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#FFFFFF"/>
+                                            <ColorAnimation Storyboard.TargetName="SundayBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#FFFFFF"/>
+                                            <ColorAnimation Storyboard.TargetName="Additional" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="#FFFFFF"/>
+                                            <ColorAnimation Storyboard.TargetName="AdditionalBox" Storyboard.TargetProperty="(TextBox.Foreground).(SolidColorBrush.Color)" To="#FFFFFF"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Button.Triggers>
+                        </Button>
+                    </DockPanel>
+                    <Button Grid.Row="1" Style="{StaticResource Bt}" Command="{Binding Path=ShowMainWindow}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="166"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Width="21" Height="21" DockPanel.Dock="Left"
+                                   Source="{DynamicResource NoteListWhite}"/>
+                            <TextBlock Grid.Column="1" Foreground="White" DockPanel.Dock="Left" Text="Список заметок"/>
+                        </Grid>
+                    </Button>
+                    <Button Grid.Row="2" Style="{StaticResource Bt}" Command="{Binding Path=DeleteNote}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="166"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Width="21" Height="21"
+                                   DockPanel.Dock="Left" Source="{DynamicResource DeleteNoteWhite}"/>
+                            <TextBlock Grid.Column="1" Foreground="White" DockPanel.Dock="Left" Text="Удалить заметку"/>
+                        </Grid>
+                    </Button>
+                </Grid>
+            </Border>
+            <Grid Grid.Row="1" Name="Note">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" MinHeight="19"/>
+                    <RowDefinition Height="*" Name="MondayRow" MinHeight="29"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" Name="TuesdayRow" MinHeight="48"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" Name="WednesdayRow" MinHeight="48"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" Name="ThursdayRow" MinHeight="48"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" Name="FridayRow" MinHeight="48"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" Name="SaturdayRow" MinHeight="48"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" Name="SundayRow" MinHeight="48"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" Name="AdditionalTextRow" MinHeight="48"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Background="#1E1E1E">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="1" Name="Monday" Foreground="{Binding Path=TextColorBlack}" Text="Понедельник" TextAlignment="Center" FontWeight="Bold" />
+                    <TextBox Grid.Column="2" Name="MondayBox" Margin="2,0,2,0" Foreground="{Binding Path=TextColorBlack}" Background="#1E1E1E" BorderThickness="0" Text="{Binding Path=MondayDate}" TextAlignment="Right" FontWeight="Bold"/>
+                </Grid>
+                <TextBox Grid.Row="1" BorderBrush="#333333" Panel.ZIndex="0"
+                         BorderThickness="0"
+                         FontSize="14"
+                         Name="MondayNoteText"
+                         Text="{Binding Path=MondayText}"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"
+                         Padding="2,1,2,1"
+                         Background="#333333"
+                         Foreground="White" />
+                <GridSplitter Grid.Row="2" Background="#1E1E1E" Height="3" ResizeBehavior="PreviousAndNext"
+                              HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                <Grid Grid.Row="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="19" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Background="#1E1E1E">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="1" Name="Tuesday" Foreground="{Binding Path=TextColorBlack}" Text="Вторник" TextAlignment="Center" FontWeight="Bold" />
+                        <TextBox Grid.Column="2" Name="TuesdayBox" Margin="2,0,2,0" Foreground="{Binding Path=TextColorBlack}" Background="#1E1E1E" BorderThickness="0" Text="{Binding Path=TuesdayDate}" TextAlignment="Right" FontWeight="Bold"/>
+                    </Grid>
+                    <TextBox Grid.Row="1" BorderBrush="#333333" Panel.ZIndex="0"
+                             BorderThickness="0"
+                             FontSize="14"
+                             Text="{Binding Path=TuesdayText}"
+                             TextWrapping="Wrap"
+                             Name="TuesdayNoteText"
+                             AcceptsReturn="True"
+                             Padding="2,1,2,1"
+                             Background="#333333"
+                             Foreground="White" />
+                </Grid>
+                <GridSplitter Grid.Row="4" Background="#1E1E1E" Height="3" ResizeBehavior="PreviousAndNext"
+                              HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                <Grid Grid.Row="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="19" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Background="#1E1E1E">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="1" Name="Wednesday"  Foreground="{Binding Path=TextColorBlack}" Text="Среда" TextAlignment="Center" FontWeight="Bold"/>
+                        <TextBox Grid.Column="2" Name="WednesdayBox" Margin="2,0,2,0" Foreground="{Binding Path=TextColorBlack}" Background="#1E1E1E" BorderThickness="0" Text="{Binding Path=WednesdayDate}" TextAlignment="Right" FontWeight="Bold"/>
+                    </Grid>
+                    <TextBox Grid.Row="1" BorderBrush="#333333" Panel.ZIndex="0"
+                             BorderThickness="0"
+                             FontSize="14"
+                             Text="{Binding Path=WednesdayText}"
+                             TextWrapping="Wrap"
+                             Name="WednesdayNoteText"
+                             AcceptsReturn="True"
+                             Padding="2,1,2,1"
+                             Background="#333333"
+                             Foreground="White" />
+                </Grid>
+
+                <GridSplitter Grid.Row="6" Height="3" Background="#1E1E1E"
+                              ResizeBehavior="PreviousAndNext"
+                              HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                <Grid Grid.Row="7">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="19" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Background="#1E1E1E">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="1" Name="Thursday"  Foreground="{Binding Path=TextColorBlack}" Text="Четверг" TextAlignment="Center" FontWeight="Bold"/>
+                        <TextBox Grid.Column="2" Name="ThursdayBox" Margin="2,0,2,0" Foreground="{Binding Path=TextColorBlack}" Background="#1E1E1E" BorderThickness="0" Text="{Binding Path=ThursdayDate}" TextAlignment="Right" FontWeight="Bold"/>
+                    </Grid>
+                    <TextBox Grid.Row="1" BorderBrush="#333333" Panel.ZIndex="0"
+                             BorderThickness="0"
+                             FontSize="14"
+                             Text="{Binding Path=ThursdayText}"
+                             TextWrapping="Wrap"
+                             Name="ThursdayNoteText"
+                             AcceptsReturn="True"
+                             Padding="2,1,2,1"
+                             Background="#333333"
+                             Foreground="White" />
+                </Grid>
+
+                <GridSplitter Grid.Row="8" Height="3" Background="#1E1E1E" ResizeBehavior="PreviousAndNext"
+                              HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                <Grid Grid.Row="9">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="19" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Background="#1E1E1E">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="1" Name="Friday"   Foreground="{Binding Path=TextColorBlack}" Text="Пятница" TextAlignment="Center" FontWeight="Bold"/>
+                        <TextBox Grid.Column="2" Name="FridayBox" Margin="2,0,2,0" Foreground="{Binding Path=TextColorBlack}" Background="#1E1E1E" BorderThickness="0" Text="{Binding Path=FridayDate}" TextAlignment="Right" FontWeight="Bold"/>
+                    </Grid>
+                    <TextBox Grid.Row="1" BorderBrush="#333333" Panel.ZIndex="0"
+                             BorderThickness="0"
+                             FontSize="14"
+                             Text="{Binding Path=FridayText}"
+                             Name="FridayNoteText"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             Padding="2,1,2,1"
+                             Background="#333333"
+                             Foreground="White" />
+                </Grid>
+
+                <GridSplitter Grid.Row="10" Height="3" Background="#1E1E1E" ResizeBehavior="PreviousAndNext"
+                              HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                <Grid Grid.Row="11">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="19" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Background="#1E1E1E">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="1" Name="Saturday"  Foreground="{Binding Path=TextColorBlack}" Text="Суббота" TextAlignment="Center" FontWeight="Bold"/>
+                        <TextBox Grid.Column="2" Name="SaturdayBox" Margin="2,0,2,0" Foreground="{Binding Path=TextColorBlack}" Background="#1E1E1E" BorderThickness="0" Text="{Binding Path=SaturdayDate}" TextAlignment="Right" FontWeight="Bold"/>
+                    </Grid>
+                    <TextBox Grid.Row="1" BorderBrush="#333333" Panel.ZIndex="0"
+                             BorderThickness="0"
+                             FontSize="14"
+                             Text="{Binding Path=SaturdayText}"
+                             Name="SaturdayNoteText"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             Padding="2,1,2,1"
+                             Background="#333333"
+                             Foreground="White" />
+                </Grid>
+
+                <GridSplitter Grid.Row="12" Height="3" Background="#1E1E1E" ResizeBehavior="PreviousAndNext"
+                              HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                <Grid Grid.Row="13">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="19" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Background="#1E1E1E">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="1" Name="Sunday"   Foreground="{Binding Path=TextColorBlack}" Text="Воскресенье" TextAlignment="Center" FontWeight="Bold"/>
+                        <TextBox Grid.Column="2" Name="SundayBox" Margin="2,0,2,0" Foreground="{Binding Path=TextColorBlack}" Background="#1E1E1E" BorderThickness="0" Text="{Binding Path=SundayDate}" TextAlignment="Right" FontWeight="Bold"/>
+                    </Grid>
+                    <TextBox Grid.Row="1" BorderBrush="#333333" Panel.ZIndex="0"
+                             BorderThickness="0"
+                             FontSize="14"
+                             Text="{Binding Path=SundayText}"
+                             Name="SundayNoteText"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             Padding="2,1,2,1"
+                             Background="#333333"
+                             Foreground="White" />
+                </Grid>
+
+                <GridSplitter Grid.Row="14" Height="3" Background="#1E1E1E" ResizeBehavior="PreviousAndNext"
+                              HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+                <Grid Grid.Row="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="19" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Background="#1E1E1E">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto" MinWidth="20"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="1" Name="Additional" Background="#1E1E1E" Foreground="{Binding Path=TextColorBlack}" BorderThickness="0" Text="{Binding Path=AdditionalHeaderText}" TextAlignment="Center" FontWeight="Bold"/>
+                        <TextBox Grid.Column="2" Name="AdditionalBox" Margin="2,0,2,0" Foreground="{Binding Path=TextColorBlack}" Background="#1E1E1E" BorderThickness="0" Text="{Binding Path=AdditionalDate}" TextAlignment="Right" FontWeight="Bold"/>
+                    </Grid>
+                    <TextBox Grid.Row="1" BorderBrush="#333333" Panel.ZIndex="0"
+                             BorderThickness="0"
+                             FontSize="14"
+                             Text="{Binding Path=AdditionalText}"
+                             Name="AdditionalNoteText"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             Padding="2,1,2,1"
+                             Background="#333333"
+                             Foreground="White" />
+                </Grid>
+                <Grid.Triggers>
+                    <EventTrigger RoutedEvent="Mouse.PreviewMouseDown">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="ColorPickMenu" Duration="0:0:0:5"
+                                                 SpeedRatio="35" Storyboard.TargetProperty="Height" To="0">
+                                    <DoubleAnimation.EasingFunction>
+                                        <CubicEase EasingMode="EaseIn" />
+                                    </DoubleAnimation.EasingFunction>
+                                </DoubleAnimation>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Grid.Triggers>
+            </Grid>
+        </Grid>
+    </Border>
+    <Window.Triggers>
+        
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Duration="0:0:1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="GridNote" From="0" SpeedRatio="7" To="1" />
+                </Storyboard>
+            </BeginStoryboard>
+            <BeginStoryboard>
+                <Storyboard>
+                    <ThicknessAnimation BeginTime="0:0:1" Duration="0:0:0:3" SpeedRatio="30" To="0,0,0,24" Storyboard.TargetName="Dock" Storyboard.TargetProperty="Margin"/>
+                    <DoubleAnimation Storyboard.TargetName="ColorPickMenu" Duration="0:0:0:5" SpeedRatio="35" Storyboard.TargetProperty="Height" To="0">
+                        <DoubleAnimation.EasingFunction>
+                            <CubicEase EasingMode="EaseIn"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="Mouse.MouseLeave">
+            <BeginStoryboard>
+                <Storyboard>
+                    <ThicknessAnimation BeginTime="0:0:1" Duration="0:0:0:3" SpeedRatio="30" To="0,0,0,24" Storyboard.TargetName="Dock" Storyboard.TargetProperty="Margin"/>
+                    <DoubleAnimation Storyboard.TargetName="ColorPickMenu" Duration="0:0:0:5" SpeedRatio="35" Storyboard.TargetProperty="Height" To="0">
+                        <DoubleAnimation.EasingFunction>
+                            <CubicEase EasingMode="EaseIn"/>
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="Mouse.PreviewMouseDown">
+            <BeginStoryboard>
+                <Storyboard>
+                    <ThicknessAnimation Duration="0:0:0:3" SpeedRatio="30" To="0,0,0,0" Storyboard.TargetName="Dock" Storyboard.TargetProperty="Margin"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
+</Window>

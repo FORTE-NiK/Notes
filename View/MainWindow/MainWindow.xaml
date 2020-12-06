@@ -1,0 +1,113 @@
+﻿<Window x:Class="ForteNotes.MainWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:ForteNotes"
+		mc:Ignorable="d" 
+		WindowStyle="None"
+		Title="MainWindow" 
+		Height="480" Width="267.485"
+		MinHeight="200"
+		MinWidth="200"
+		MaxHeight="800"
+		MaxWidth="800"
+		Icon="MWIcon/noteIcon.ico"
+		Background="Transparent"
+		AllowsTransparency="True"
+		RenderOptions.BitmapScalingMode="NearestNeighbor"
+		>
+	<Window.Resources>
+		<Style x:Key="Resize">
+			<Setter Property="WindowChrome.WindowChrome">
+				<Setter.Value>
+					<WindowChrome CaptionHeight="0" ResizeBorderThickness="3"/>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</Window.Resources>
+    <Border Margin="3,0,3,3" Name="MainWindowContent" BorderThickness="0.7" BorderBrush="{Binding Path=BorderColor}">
+        <Border.Effect>
+			<DropShadowEffect Color="Black"
+							  BlurRadius="4" ShadowDepth="2" Direction="-75" />
+		</Border.Effect>
+		<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="30"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<DockPanel LastChildFill="False" Background="#414141" MouseDown="MoveWindow">
+				<Button Style="{StaticResource Bt}" Width="30" Background="#414141" DockPanel.Dock="Right" Command="{Binding Path=CloseWindow}"><!--Command="{Binding Path=CloseWindow}"-->
+					<Image Source="{StaticResource Close}" Width="15" Height="15"/>
+             
+                </Button>
+				<Button Width="30" Name="SettingsButton" DockPanel.Dock="Right" Background="#414141"  Style="{StaticResource Bt}" Command="{Binding Path=SettingsButton}"  >
+					<Image RenderOptions.BitmapScalingMode="HighQuality" Source="{StaticResource SettingsButton}" Width="19" Height="19"/>
+				<Button.Triggers>
+					<EventTrigger RoutedEvent="Button.Click">
+						<BeginStoryboard>
+							<Storyboard >
+								<DoubleAnimation Storyboard.TargetName="SettingsButton" Storyboard.TargetProperty="Opacity" To="0" SpeedRatio="20"/>
+								<DoubleAnimation Storyboard.TargetName="AddNoteButton" Storyboard.TargetProperty="Opacity" To="0" SpeedRatio="30"/>
+                                <DoubleAnimation Storyboard.TargetName="AddSimpleNoteButton" Storyboard.TargetProperty="Opacity" To="0" SpeedRatio="30"/>
+                                <DoubleAnimation Storyboard.TargetName="BackButton" BeginTime="0:0:0:1" Storyboard.TargetProperty="Opacity" To="1" SpeedRatio="30"/>
+							</Storyboard>
+						</BeginStoryboard>
+					</EventTrigger>
+				</Button.Triggers>
+			</Button>
+			<Grid>
+                    <Button Width="30" Name="AddSimpleNoteButton" DockPanel.Dock="Left" Background="#414141"
+						Style="{StaticResource Bt}" Command="{Binding Path=CreateSimpleNote}">
+                        <Image Source="{StaticResource Note}" Width="19" Height="19"
+						   />
+				</Button>
+                    <Button Width="30" Name="BackButton" DockPanel.Dock="Left" Visibility="Hidden" Background="#414141"
+						Style="{StaticResource Bt}" Opacity="0" Command="{Binding Path=BackButton}">
+                        <Image Source="{StaticResource BackButton}" Height="19" Width="19"/>
+
+                        <Button.Triggers>
+                            <EventTrigger RoutedEvent="Button.Click">
+                                <BeginStoryboard>
+                                    <Storyboard >
+                                        <DoubleAnimation Storyboard.TargetName="SettingsButton" Storyboard.TargetProperty="Opacity" To="1" SpeedRatio="20"/>
+                                        <DoubleAnimation Storyboard.TargetName="AddNoteButton" Storyboard.TargetProperty="Opacity" To="1" SpeedRatio="30"/>
+                                        <DoubleAnimation Storyboard.TargetName="AddSimpleNoteButton" Storyboard.TargetProperty="Opacity" To="1" SpeedRatio="30"/>
+                                        <DoubleAnimation Storyboard.TargetName="BackButton" BeginTime="0:0:0:1" Storyboard.TargetProperty="Opacity" To="0" SpeedRatio="30"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </Grid>
+                <Button Width="30" DockPanel.Dock="Left" Name="AddNoteButton"
+					 Command="{Binding Path=CreateNote}" Style="{StaticResource Bt}" >
+                    <Image Source="{StaticResource SimpleNote}" Height="19" Width="19"/>
+                </Button>
+			</DockPanel>
+		<Grid Grid.Row="1" Background="#202020">
+			<ContentControl x:Name="MWSettingsAndNotes" Grid.ColumnSpan="2"/>
+				<Grid.Triggers>
+					<EventTrigger RoutedEvent="local:MainWindow.notesUpdate">
+						<BeginStoryboard>
+							<Storyboard TargetProperty="Opacity" TargetName="MWSettingsAndNotes">
+								<DoubleAnimation To="0" SpeedRatio="10" Duration="0:0:0:1"/>
+								<DoubleAnimation To="1" SpeedRatio="10" BeginTime="0:0:0:1"/>
+							</Storyboard>
+						</BeginStoryboard>
+					</EventTrigger>
+				</Grid.Triggers>
+		</Grid>
+	</Grid>
+	</Border>
+	<Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation Duration="0:0:1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="MainWindowContent" From="0" SpeedRatio="7" To="1" />
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
+
+</Window>

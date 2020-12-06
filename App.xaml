@@ -1,0 +1,24 @@
+﻿<Application x:Class="ForteNotes.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ForteNotes"
+             StartupUri="View/MainWindow/MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="View/Notes/Buttons.xaml" />
+                <ResourceDictionary Source="View/MainWindow/MainButtons/BackButton.xaml"  />
+                <ResourceDictionary Source="View/MainWindow/MainButtons/Close.xaml" />
+                <ResourceDictionary Source="View/MainWindow/MainButtons/Note.xaml" />
+                <ResourceDictionary Source="View/MainWindow/MainButtons/SettingsButton.xaml" />
+                <ResourceDictionary Source="View/MainWindow/MainButtons/SimpleNote.xaml" />
+                <ResourceDictionary Source="View/Notes/ButtonsRes/DockButtons/DeleteNoteRed.xaml" />
+                <ResourceDictionary Source="View/Notes/ButtonsRes/DockButtons/DeleteNoteWhite.xaml" />
+                <ResourceDictionary Source="View/Notes/ButtonsRes/DockButtons/NoteListBlack.xaml" />
+                <ResourceDictionary Source="View/Notes/ButtonsRes/DockButtons/NoteListWhite.xaml" />
+                <ResourceDictionary Source="View/Notes/ButtonsRes/NoteTemplateButtons/Delete.xaml" />
+                <ResourceDictionary Source="View/Notes/ButtonsRes/NoteTemplateButtons/ShowNote.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

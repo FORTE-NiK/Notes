@@ -1,0 +1,8 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+>
+
+<DrawingImage x:Key="BackButton">
+  <DrawingImage.Drawing>    <DrawingGroup>      <DrawingGroup.Children>        <DrawingGroup>          <DrawingGroup.Children>            <GeometryDrawing Brush="#FF878787" Pen="{x:Null}">              <GeometryDrawing.Geometry>                <PathGeometry FillRule="Nonzero" Figures="M19.03125,4.28125L8.03125,15.28125 7.34375,16 8.03125,16.71875 19.03125,27.71875 20.46875,26.28125 10.1875,16 20.46875,5.71875z" />              </GeometryDrawing.Geometry>            </GeometryDrawing>          </DrawingGroup.Children>          <DrawingGroup.ClipGeometry>            <RectangleGeometry Rect="0,0,32,32" />          </DrawingGroup.ClipGeometry>        </DrawingGroup>      </DrawingGroup.Children>    </DrawingGroup>  </DrawingImage.Drawing></DrawingImage>
+
+</ResourceDictionary>
